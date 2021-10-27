@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Http\Middleware\Authenticate;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticate
+class User extends Authenticatable
 {
     public function country(){
 

@@ -106,6 +106,13 @@
             <div class="col-12">
                 <button type="submit" class="btn btn-dark">Registruj se</button>
             </div>
+            @if(session()->has('error'))
+                <x-alert type="danger" message="{{session()->get('error')}}" />
+            @endif
+
+            @if(session()->has('success'))
+                <x-alert type="success" message="{{session()->get('success')}}" />
+            @endif
         </form>
     </div>
 
