@@ -18,3 +18,4 @@ Route::get('/', function () {
     return view('pages.home');
 });
 Route::post('/register', [AuthenticationController::class, 'register'])->name('user_register');
+Route::post('/login', [AuthenticationController::class, 'login'])->name('login');

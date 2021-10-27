@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\City;
 use App\Models\Country;
@@ -9,6 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthenticationController extends Controller
 {
@@ -71,5 +73,17 @@ class AuthenticationController extends Controller
 
         }
 
+    }
+
+    public function login(LoginRequest $request){
+
+        if (Auth::attempt(['username' => $request->login_username, 'password' => $request->login_password, 'is_active' => 1])) {
+            $request->session()->regenerate();
+
+            return back();
+        }
+        else{
+            return back()->with('loginError', 'Neispravna lozinka ili korisničko ime');
+        }
     }
 }
