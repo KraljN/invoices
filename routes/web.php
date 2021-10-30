@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +16,8 @@ use \App\Http\Controllers\AuthenticationController;
 |
 */
 
-Route::get('/', function () {
-    return view('pages.home');
-});
+Route::get('/', [InvoiceController::class, 'index'])->name('home');
 Route::post('/register', [AuthenticationController::class, 'register'])->name('user_register');
 Route::post('/login', [AuthenticationController::class, 'login'])->name('login');
+Route::get('/logout', [AuthenticationController::class, 'logout'])->name('logout');
+Route::resource('clients', ClientController::class);

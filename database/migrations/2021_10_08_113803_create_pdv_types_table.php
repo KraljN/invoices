@@ -15,7 +15,7 @@ class CreatePdvTypesTable extends Migration
     {
         Schema::create('pdv_types', function (Blueprint $table) {
             $table->id();
-            $table->string('pdf_type_name', 10);
+            $table->smallInteger('pdv_type_name');
             $table->timestamps();
         });
     }

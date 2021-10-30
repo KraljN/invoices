@@ -78,12 +78,18 @@ class AuthenticationController extends Controller
     public function login(LoginRequest $request){
 
         if (Auth::attempt(['username' => $request->login_username, 'password' => $request->login_password, 'is_active' => 1])) {
-            $request->session()->regenerate();
 
+            $request->session()->regenerate();
             return back();
         }
         else{
             return back()->with('loginError', 'Neispravna lozinka ili korisničko ime');
         }
+    }
+    public function logout(){
+
+        Auth::logout();
+        return redirect("/");
+
     }
 }

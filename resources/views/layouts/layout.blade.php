@@ -3,7 +3,9 @@
 
 @include('fixed.header')
 
-@include('fixed.navigation')
+@auth
+    @include('fixed.navigation')
+@endauth
 
 @yield('content')
 
