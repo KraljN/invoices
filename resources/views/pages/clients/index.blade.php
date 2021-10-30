@@ -8,7 +8,7 @@
     <div class="row w-100 d-flex justify-content-around align-items-center bg-light py-3">
         <div class="col-2 fw-bold">Klijenti</div>
         <div class="col-2">
-            <form action="#">
+            <form action="{{ route('clients.create') }}">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-plus me-2 text-white"></i> Dodaj Klijenta</button>
             </form>
         </div>
@@ -16,6 +16,9 @@
     <hr class="my-0"/>
     <div class="container">
         <div class="row w-100">
+            @if( count( $clients ) == 0)
+                <x-alert type="info" message="Trenutno nemate ni jednog klijenta." />
+            @else
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -56,6 +59,7 @@
                     </tbody>
                 </table>
             </div>
+            @endif
         </div>
     </div>
 @endsection

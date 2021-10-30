@@ -3,9 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
+use App\Http\Requests\ClientRegisterRequest;
+use App\Models\City;
 use App\Models\Client;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class ClientController extends BaseController
 {
@@ -20,7 +26,7 @@ class ClientController extends BaseController
         foreach ($this->data['clients'] as $client){
             $client->debt = Helper::countDebt($client);
         }
-        return view('pages.clients', $this->data);
+        return view('pages.clients.index', $this->data);
     }
 
     /**
@@ -30,7 +36,7 @@ class ClientController extends BaseController
      */
     public function create()
     {
-        //
+        return view('pages.clients.form');
     }
 
     /**
@@ -39,9 +45,12 @@ class ClientController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ClientRegisterRequest $request)
     {
-        //
+        $client = new Client();
+        Helper::insertIfNameDoesntExist($request->country, new Country(), $client);
+        Helper::insertIfNameDoesntExist($request->city, new City(), $client);
+        dd($client);
     }
 
     /**
