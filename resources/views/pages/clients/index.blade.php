@@ -47,7 +47,9 @@
                                         <i class="fas fa-edit text-white"></i>
                                     </button>
                                 </a>
-                                <form action="#">
+                                <form action="{{ route('clients.destroy', $client->id) }}" method="POST">
+
+                                    @method('DELETE')
                                     <button type="submit" class="btn btn-danger">
                                         <i class="fas fa-trash text-white"></i>
                                     </button>

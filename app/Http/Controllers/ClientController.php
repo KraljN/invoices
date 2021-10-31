@@ -52,18 +52,6 @@ class ClientController extends BaseController
         return Helper::fillClientValues($request, $client, 'Uspešno dodat novi klijent.');
 
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -119,6 +107,7 @@ class ClientController extends BaseController
      */
     public function destroy($id)
     {
-        //
+        Client::find($id)->delete();
+        return back();
     }
 }

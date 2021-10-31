@@ -16,8 +16,10 @@ use App\Http\Controllers\ClientController;
 |
 */
 
-Route::get('/', [InvoiceController::class, 'index'])->name('home');
 Route::post('/register', [AuthenticationController::class, 'register'])->name('user_register');
 Route::post('/login', [AuthenticationController::class, 'login'])->name('login');
 Route::get('/logout', [AuthenticationController::class, 'logout'])->name('logout');
-Route::resource('clients', ClientController::class);
+Route::resource('clients', ClientController::class)->except(['show']);
+Route::resource('invoices', InvoiceController::class)->except(['show']);
+Route::get('/', [InvoiceController::class, 'index'])->name('home');
+

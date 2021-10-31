@@ -129,7 +129,93 @@
     @endguest
 
     @auth
-        <h1 class="text-center">Dobrodošli na sajt</h1>
+        <div class="container-fluid m-0  bg-light py-3">
+            <div class="container d-flex flex-column flex-md-row justify-content-around align-items-center">
+                <div class="col-2 fw-bold">Fakture</div>
+                <div class="col-md-8">
+                    <form class="d-flex flex-column flex-md-row" action="#" method="GET">
+                        <div class="col-md-3">
+                            <label class="visually-hidden" for="inlineFormInputGroupUsername">Ime Klijenta</label>
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fas fa-search"></i></div>
+                                <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Ime Klijenta"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3 ms-1">
+                            <input class="form-control" type="date"/>
+                        </div>
+                        <div class="col-md-3 ms-1">
+                            <select name="status" class="form-select">
+                                <option value="0">Sve</option>
+                                <option value="1">Plaćene</option>
+                                <option value="2">Neplaćene</option>
+                                <option value="3">Istekao Rok</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 ms-1">
+                            <button class="btn btn-dark" type="submit">Pretraži</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-2">
+                    <form action="{{ route('clients.create') }}">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus me-2 text-white"></i> Dodaj Fakturu</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <hr class="my-0"/>
+        <div class="container">
+            <div class="row w-100">
+{{--                @if( count( $invoices ) == 0)--}}
+{{--                    <x-alert type="info" message="Trenutno nemate ni jednog klijenta." />--}}
+{{--                @else--}}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Status</th>
+                                <th scope="col">Faktura</th>
+                                <th scope="col">Datum Izdavanja</th>
+                                <th scope="col">Valuta</th>
+                                <th scope="col">Klijent</th>
+                                <th scope="col">Ukupna Cena</th>
+                                <th scope="col">Ukupno za plaćanje</th>
+                                <th scope="col" class="text-center">Opcije</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+{{--                            @foreach($clients as $client)--}}
+{{--                                <tr>--}}
+{{--                                    <td class="text-primary fw-bold">{{ $client->client_name }}</td>--}}
+{{--                                    <td>{{ $client->address }}</td>--}}
+{{--                                    <td>{{ $client->city->name }}</td>--}}
+{{--                                    <td>{{ $client->zip }}</td>--}}
+{{--                                    <td>{{ $client->country->name }}</td>--}}
+{{--                                    <td>{{ $client->debt }} RSD</td>--}}
+{{--                                    <td class="d-flex justify-content-around align-items-center">--}}
+{{--                                        <a href="{{ route('clients.edit', $client->id) }}">--}}
+{{--                                            <button type="submit" class="btn btn-warning">--}}
+{{--                                                <i class="fas fa-edit text-white"></i>--}}
+{{--                                            </button>--}}
+{{--                                        </a>--}}
+{{--                                        <form action="{{ route('clients.destroy', $client->id) }}" method="POST">--}}
+{{--                                            @csrf--}}
+{{--                                            @method('DELETE')--}}
+{{--                                            <button type="submit" class="btn btn-danger">--}}
+{{--                                                <i class="fas fa-trash text-white"></i>--}}
+{{--                                            </button>--}}
+{{--                                        </form>--}}
+
+{{--                                    </td>--}}
+{{--                                </tr>--}}
+{{--                            @endforeach--}}
+                            </tbody>
+                        </table>
+                    </div>
+{{--                @endif--}}
+            </div>
+        </div>
     @endauth
 
 @endsection
