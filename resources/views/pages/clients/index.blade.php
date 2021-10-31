@@ -37,16 +37,16 @@
                         <tr>
                             <td class="text-primary fw-bold">{{ $client->client_name }}</td>
                             <td>{{ $client->address }}</td>
-                            <td>{{ $client->city->city_name }}</td>
+                            <td>{{ $client->city->name }}</td>
                             <td>{{ $client->zip }}</td>
-                            <td>{{ $client->country->country_name }}</td>
+                            <td>{{ $client->country->name }}</td>
                             <td>{{ $client->debt }} RSD</td>
                             <td class="d-flex justify-content-around align-items-center">
-                                <form action="#">
+                                <a href="{{ route('clients.edit', $client->id) }}">
                                     <button type="submit" class="btn btn-warning">
                                         <i class="fas fa-edit text-white"></i>
                                     </button>
-                                </form>
+                                </a>
                                 <form action="#">
                                     <button type="submit" class="btn btn-danger">
                                         <i class="fas fa-trash text-white"></i>

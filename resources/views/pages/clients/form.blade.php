@@ -23,70 +23,73 @@
                     @if( request()->routeIs('clients.create') )
                           {{ route('clients.store') }}
                     @else
-                          {{ route('clients.update') }}
+                          {{ route('clients.update', $client_info->id) }}
                     @endif
                   "
         >
             @csrf
+            @if( request()->routeIs('clients.edit') )
+                @method('PUT')
+            @endif
             <div class="col-12">
                 <label class="form-label">Naziv Klijenta</label>
-                <input type="text" value="{{old('full_company_name')}}" class="form-control" name="full_company_name"/>
+                <input type="text" value="{{ old('full_company_name', $client_info->client_name) }}" class="form-control" name="full_company_name"/>
                 @error('full_company_name')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
             <div class="col-12">
                 <label class="form-label">Email</label>
-                <input type="email" value="{{old('email')}}" class="form-control" name="email"/>
+                <input type="email" value="{{ old('email', $client_info->email) }}" class="form-control" name="email"/>
                 @error('email')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
             <div class="col-md-6">
                 <label class="form-label">Matični Broj Firme</label>
-                <input type="text" value="{{old('registration_number')}}" class="form-control" name="registration_number"/>
+                <input type="text" value="{{ old('registration_number', $client_info->registration_number) }}" class="form-control" name="registration_number"/>
                 @error('registration_number')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
             <div class="col-md-6">
                 <label class="form-label">PIB</label>
-                <input type="text" value="{{old('vat')}}" class="form-control" name="vat"/>
+                <input type="text" value="{{ old('vat', $client_info->vat) }}" class="form-control" name="vat"/>
                 @error('vat')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
             <div class="col-12">
                 <label class="form-label">Žiro Račun</label>
-                <input type="text" value="{{old('bank_number')}}" class="form-control" name="bank_number"/>
+                <input type="text" value="{{ old('bank_number', $client_info->bank_account_number) }}" class="form-control" name="bank_number"/>
                 @error('bank_number')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
             <div class="col-12">
                 <label class="form-label">Adresa</label>
-                <input type="text" value="{{old('address')}}" class="form-control" name="address"/>
+                <input type="text" value="{{ old('address', $client_info->address) }}" class="form-control" name="address"/>
                 @error('address')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
             <div class="col-md-6">
                 <label class="form-label">Grad</label>
-                <input type="text" value="{{old('city')}}" class="form-control" name="city"/>
+                <input type="text" value="{{ old('city', $client_info->city->name) }}" class="form-control" name="city"/>
                 @error('city')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
             <div class="col-md-4">
                 <label class="form-label">Država</label>
-                <input type="text" value="{{old('country')}}" class="form-control" name="country"/>
+                <input type="text" value="{{ old('country', $client_info->country->name) }}" class="form-control" name="country"/>
                 @error('country')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
             <div class="col-md-2">
                 <label class="form-label">Poštanski broj</label>
-                <input type="text" value="{{old('zip')}}" class="form-control" name="zip"/>
+                <input type="text" value="{{ old('zip', $client_info->zip) }}" class="form-control" name="zip"/>
                 @error('zip')
                 <x-alert type="danger" :message="$message" />
                 @enderror

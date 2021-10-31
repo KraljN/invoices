@@ -25,23 +25,23 @@ class Helper {
         return $totalDebt;
 
     }
-    public static function insertIfNameDoesntExist($valueToCheck, $objectToCheck, $objectToAppendValue){
+    public static function insertIfNameDoesntExist($valueToCheck, $objectToCheck, $relation){
 
         $modelName = get_class($objectToCheck);
-        // $relation = strtolower( last( explode('/', $modelName) ) ); Od "App\Models\City" dobijamo "city"
+        $objectToAppendValue = $relation->getChild();
         $databaseValue = $modelName::where('name', $valueToCheck)->first();
 
         if($databaseValue){
-            //Iz nekog razloga ne radi $objectToAppendValue->$relation()->associate($databaseValue): Call to undefined method App\Models\Client::app\models\city() iako postoji ta relacija(metod) unutar klase
-            //Hardcodovanjem npr. city() Laravel sam prepozna relaciju koju treba da poveže :\
-            $objectToAppendValue->city()->associate($databaseValue);
+            $relation->associate($databaseValue);
+            return $objectToAppendValue;
         }
         else{
             $newInsert = new $modelName();
             $newInsert->name = $valueToCheck;
             try{
                 $newInsert->save();
-                $objectToAppendValue->city()->associate($newInsert);
+                $relation->associate($newInsert);
+                return $objectToAppendValue;
             }
             catch (\PDOException $e){
                 DB::rollBack();

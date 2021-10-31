@@ -20,8 +20,9 @@ class AuthenticationController extends Controller
         $user = new User();
         DB::beginTransaction();
 
-        Helper::insertIfNameDoesntExist($request->country, new Country(), $user);
-        Helper::insertIfNameDoesntExist($request->city, new City(), $user);
+        $user = Helper::insertIfNameDoesntExist($request->country, new Country(), $user->country());
+        $user = Helper::insertIfNameDoesntExist($request->city, new City(), $user->city());
+
 
         $user->username = $request->username;
         $user->password = Hash::make($request->password);

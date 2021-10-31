@@ -36,7 +36,8 @@ class ClientController extends BaseController
      */
     public function create()
     {
-        return view('pages.clients.form');
+        $this->data['client_info'] = new Client(); // Dodato da ne bi bacalo grešku u formi za insert: Undefined variable $client_info
+        return view('pages.clients.form', $this->data);
     }
 
     /**
@@ -48,9 +49,32 @@ class ClientController extends BaseController
     public function store(ClientRegisterRequest $request)
     {
         $client = new Client();
-        Helper::insertIfNameDoesntExist($request->country, new Country(), $client);
-        Helper::insertIfNameDoesntExist($request->city, new City(), $client);
-        dd($client);
+        DB::beginTransaction();
+
+        $client =  Helper::insertIfNameDoesntExist($request->country, new Country(), $client->country());
+        $client = Helper::insertIfNameDoesntExist($request->city, new City(), $client->city());
+
+        $client->user()->associate(Auth::user());
+        $client->vat = $request->vat;
+        $client->bank_account_number = $request->bank_number;
+        $client->address = $request->address;
+        $client->registration_number = $request->registration_number;
+        $client->email = $request->email;
+        $client->client_name = $request->full_company_name;
+        $client->zip = $request->zip;
+
+
+        try{
+            $client->save();
+            DB::commit();
+            return  redirect()->back()->with('success', 'Uspešno je dodat novi klijent.');
+        }
+        catch (\PDOException $e){
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+//            Došlo je do greške prilikom dodavanja klijenta. Molimo pokušajte kasnije.
+
+        }
     }
 
     /**
@@ -72,7 +96,9 @@ class ClientController extends BaseController
      */
     public function edit($id)
     {
-        //
+        $this->data['client_info'] = Client::with(['country', 'city'])->find($id);
+        return view('pages.clients.form', $this->data);
+
     }
 
     /**
@@ -82,7 +108,7 @@ class ClientController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ClientRegisterRequest $request, $id)
     {
         //
     }
