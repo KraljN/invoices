@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
-use App\Http\Requests\ClientRegisterRequest;
+use App\Http\Requests\ClientRequest;
 use App\Models\City;
 use App\Models\Client;
 use App\Models\Country;
@@ -46,35 +46,11 @@ class ClientController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ClientRegisterRequest $request)
+    public function store(ClientRequest $request)
     {
         $client = new Client();
-        DB::beginTransaction();
+        return Helper::fillClientValues($request, $client, 'Uspešno dodat novi klijent.');
 
-        $client =  Helper::insertIfNameDoesntExist($request->country, new Country(), $client->country());
-        $client = Helper::insertIfNameDoesntExist($request->city, new City(), $client->city());
-
-        $client->user()->associate(Auth::user());
-        $client->vat = $request->vat;
-        $client->bank_account_number = $request->bank_number;
-        $client->address = $request->address;
-        $client->registration_number = $request->registration_number;
-        $client->email = $request->email;
-        $client->client_name = $request->full_company_name;
-        $client->zip = $request->zip;
-
-
-        try{
-            $client->save();
-            DB::commit();
-            return  redirect()->back()->with('success', 'Uspešno je dodat novi klijent.');
-        }
-        catch (\PDOException $e){
-            DB::rollBack();
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
-//            Došlo je do greške prilikom dodavanja klijenta. Molimo pokušajte kasnije.
-
-        }
     }
 
     /**
@@ -96,7 +72,12 @@ class ClientController extends BaseController
      */
     public function edit($id)
     {
-        $this->data['client_info'] = Client::with(['country', 'city'])->find($id);
+        $client = Client::with(['country', 'city'])->find($id);
+        //Ovo radimo da bi u form.blade.php prikazali sa $client->country umesto $client->country->name jer ce kod store funkcije $client->country biti null pa se nece moci procitati name iz null
+        $client->country = $client->country->name;
+        $client->city = $client->city->name;
+        //=========================================
+        $this->data['client_info'] = $client;
         return view('pages.clients.form', $this->data);
 
     }
@@ -108,9 +89,26 @@ class ClientController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ClientRegisterRequest $request, $id)
+    public function update(ClientRequest $request, $id)
     {
-        //
+        //Provera da li je neki podatak promenjen u odnosu na ono sto se nalazi u bazi
+        $clientInDatabase = Client::with(['country', 'city'])->find($id);
+        $optimizedClientToCompare = clone $clientInDatabase;
+        //=======Prilagodjavanje atributa radi lakseg kasnijeg poredjenja===========
+        $optimizedClientToCompare->country = $clientInDatabase->country->name;
+        $optimizedClientToCompare->city = $clientInDatabase->city->name;
+        //==========================================================================
+        $dataFromClientInDatabase = $optimizedClientToCompare->attributesToArray();
+        $formData = Helper::removeFromAssociativeArray($request->all(), ['_token', '_method']);
+        $dataFromClientInDatabase = Helper::removeFromAssociativeArray($dataFromClientInDatabase, ['id', 'country_id', 'city_id', 'user_id', 'created_at', 'updated_at']);
+        $difference = array_diff_assoc($formData, $dataFromClientInDatabase);
+        //Kraj provere
+        if( count( $difference ) == 0 ){
+            return redirect()->back()->withInput()->with('error', 'Morate promeniti makar jedno polje.');
+        }
+        else{
+            return Helper::fillClientValues($request, $clientInDatabase, 'Uspešno izmenjen klijent.');
+        }
     }
 
     /**

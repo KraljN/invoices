@@ -33,8 +33,8 @@
             @endif
             <div class="col-12">
                 <label class="form-label">Naziv Klijenta</label>
-                <input type="text" value="{{ old('full_company_name', $client_info->client_name) }}" class="form-control" name="full_company_name"/>
-                @error('full_company_name')
+                <input type="text" value="{{ old('client_name', $client_info->client_name) }}" class="form-control" name="client_name"/>
+                @error('client_name')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
@@ -61,8 +61,8 @@
             </div>
             <div class="col-12">
                 <label class="form-label">Žiro Račun</label>
-                <input type="text" value="{{ old('bank_number', $client_info->bank_account_number) }}" class="form-control" name="bank_number"/>
-                @error('bank_number')
+                <input type="text" value="{{ old('bank_account_number', $client_info->bank_account_number) }}" class="form-control" name="bank_account_number"/>
+                @error('bank_account_number')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
@@ -75,14 +75,14 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label">Grad</label>
-                <input type="text" value="{{ old('city', $client_info->city->name) }}" class="form-control" name="city"/>
+                <input type="text" value="{{ old('city', $client_info->city) }}" class="form-control" name="city"/>
                 @error('city')
                 <x-alert type="danger" :message="$message" />
                 @enderror
             </div>
             <div class="col-md-4">
                 <label class="form-label">Država</label>
-                <input type="text" value="{{ old('country', $client_info->country->name) }}" class="form-control" name="country"/>
+                <input type="text" value="{{ old('country', $client_info->country) }}" class="form-control" name="country"/>
                 @error('country')
                 <x-alert type="danger" :message="$message" />
                 @enderror
