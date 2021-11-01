@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
+use App\Models\Invoice;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
-class InvoiceController extends Controller
+class InvoiceController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +18,16 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        return view('pages.home');
+        $allUnpaidInvoices = Invoice::with('invoiceStatus')->whereHas('invoiceStatus', function (Builder $query) {
+            $query->where('id', Config::get('constants.invoice_status.unpaid'));
+        })->get();
+        Helper::checkIfOverdue($allUnpaidInvoices);
+        $this->data['invoices'] = Invoice::with(['client', 'payments', 'items', 'invoiceStatus'])->where('user_id', Auth::id())->get();
+        foreach ($this->data['invoices'] as $invoice){
+            $invoice->total = Helper::countInvoiceDebt($invoice);
+            $invoice->debt = Helper::countDebt($invoice);
+        }
+        return view('pages.home', $this->data);
     }
 
     /**

@@ -6,27 +6,48 @@ use App\Http\Requests\ClientRequest;
 use App\Models\City;
 use App\Models\Client;
 use App\Models\Country;
-use Illuminate\Http\Request;
+use App\Models\InvoiceStatus;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class Helper {
 
-    public static function countDebt($client){
+    public static function countDebt(Model $objectToCountDebt){
+
+        $totalDebt = 0;
+        if($objectToCountDebt instanceof Client){
+            foreach($objectToCountDebt->invoices as $invoice){
+                $payed = self::countPayedInvoiceAmount($invoice);
+                $invoiceDebt =  self::countInvoiceDebt($invoice);
+                $totalDebt += $invoiceDebt - $payed;
+            }
+            return $totalDebt;
+        }
+        $payed = self::countPayedInvoiceAmount($objectToCountDebt);
+        $invoiceDebt =  self::countInvoiceDebt($objectToCountDebt);
+        $totalDebt = $invoiceDebt - $payed;
+
+        return $totalDebt;
+    }
+    public static function countInvoiceDebt($invoice){
 
         $invoiceDebt = 0;
-        $totalDebt = 0;
-        $payed = 0;
-        foreach($client->invoices as $invoice){
-            foreach($invoice->payments as $payment){
-                $payed += $payment->amount;
-            }
-            foreach ($invoice->items as $item){
-                $invoiceDebt += $item->quantity * $item->price;
-            }
-            $totalDebt += $invoiceDebt - $payed;
+        foreach ($invoice->items as $item){
+            $invoiceDebt += $item->quantity * $item->price;
         }
-        return $totalDebt;
+        return $invoiceDebt;
+
+    }
+    public static function countPayedInvoiceAmount($invoice){
+
+        $payed = 0;
+        foreach($invoice->payments as $payment){
+            $payed += $payment->amount;
+        }
+        return $payed;
 
     }
     public static function insertIfNameDoesntExist($valueToCheck, $objectToCheck, $relation){
@@ -87,4 +108,20 @@ class Helper {
             return redirect()->back()->withInput()->with('error', 'Došlo je do greške. Molimo pokušajte kasnije.');
         }
     }
+    public static function formatDate($date){
+        return date('d/m/Y', strtotime($date));
+    }
+    public static function checkIfOverdue($invoices){
+
+        foreach($invoices as $invoice){
+            $endDate = Carbon::make($invoice->end_date);
+            //Ovu funkciju cemo koristiti vise puta mozda
+            if(now()->gt($endDate)){
+                $status = InvoiceStatus::find(Config::get('constants.invoice_status.overdue'));
+                $invoice->invoiceStatus()->associate($status);
+                $invoice->save();
+            }
+        }
+    }
+
 }

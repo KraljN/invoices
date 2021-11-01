@@ -167,9 +167,9 @@
         <hr class="my-0"/>
         <div class="container">
             <div class="row w-100">
-{{--                @if( count( $invoices ) == 0)--}}
-{{--                    <x-alert type="info" message="Trenutno nemate ni jednog klijenta." />--}}
-{{--                @else--}}
+                @if( count( $invoices ) == 0)
+                    <x-alert type="info" message="Trenutno nemate ni jednog klijenta." />
+                @else
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -185,35 +185,36 @@
                             </tr>
                             </thead>
                             <tbody>
-{{--                            @foreach($clients as $client)--}}
-{{--                                <tr>--}}
-{{--                                    <td class="text-primary fw-bold">{{ $client->client_name }}</td>--}}
-{{--                                    <td>{{ $client->address }}</td>--}}
-{{--                                    <td>{{ $client->city->name }}</td>--}}
-{{--                                    <td>{{ $client->zip }}</td>--}}
-{{--                                    <td>{{ $client->country->name }}</td>--}}
-{{--                                    <td>{{ $client->debt }} RSD</td>--}}
-{{--                                    <td class="d-flex justify-content-around align-items-center">--}}
-{{--                                        <a href="{{ route('clients.edit', $client->id) }}">--}}
-{{--                                            <button type="submit" class="btn btn-warning">--}}
-{{--                                                <i class="fas fa-edit text-white"></i>--}}
-{{--                                            </button>--}}
-{{--                                        </a>--}}
-{{--                                        <form action="{{ route('clients.destroy', $client->id) }}" method="POST">--}}
-{{--                                            @csrf--}}
-{{--                                            @method('DELETE')--}}
-{{--                                            <button type="submit" class="btn btn-danger">--}}
-{{--                                                <i class="fas fa-trash text-white"></i>--}}
-{{--                                            </button>--}}
-{{--                                        </form>--}}
+                            @foreach($invoices as $invoice)
+                                <tr>
+                                    <td class="fw-bold" >{{ $invoice->invoiceStatus->status_name }}</td>
+                                    <td>{{ $invoice->invoice_name }}</td>
+                                    <td>{{ Helper::formatDate($invoice->date_created) }}</td>
+                                    <td>{{ Helper::formatDate($invoice->end_date) }}</td>
+                                    <td class="text-primary fw-bold">{{ $invoice->client->client_name }}</td>
+                                    <td>{{ $invoice->total }}</td>
+                                    <td>{{ $invoice->debt }} RSD</td>
+                                    <td class="d-flex justify-content-around align-items-center">
+                                        <a href="{{ route('invoices.edit', $invoice->id) }}">
+                                            <button type="submit" class="btn btn-warning">
+                                                <i class="fas fa-edit text-white"></i>
+                                            </button>
+                                        </a>
+                                        <form action="{{ route('invoices.destroy', $invoice->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="fas fa-trash text-white"></i>
+                                            </button>
+                                        </form>
 
-{{--                                    </td>--}}
-{{--                                </tr>--}}
-{{--                            @endforeach--}}
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
-{{--                @endif--}}
+                @endif
             </div>
         </div>
     @endauth
