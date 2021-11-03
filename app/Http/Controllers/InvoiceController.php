@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
 use App\Models\Invoice;
+use App\Repository\InvoiceRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,13 @@ use Illuminate\Support\Facades\Config;
 
 class InvoiceController extends BaseController
 {
+    private $invoiceRepository;
+
+    public function __construct(InvoiceRepositoryInterface $invoiceRepository)
+    {
+        $this->invoiceRepository = $invoiceRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,11 +29,11 @@ class InvoiceController extends BaseController
         $allUnpaidInvoices = Invoice::with('invoiceStatus')->whereHas('invoiceStatus', function (Builder $query) {
             $query->where('id', Config::get('constants.invoice_status.unpaid'));
         })->get();
-        Helper::checkIfOverdue($allUnpaidInvoices);
+        $this->invoiceRepository->checkIfOverdue($allUnpaidInvoices);
         $this->data['invoices'] = Invoice::with(['client', 'payments', 'items', 'invoiceStatus'])->where('user_id', Auth::id())->get();
         foreach ($this->data['invoices'] as $invoice){
-            $invoice->total = Helper::countInvoiceDebt($invoice);
-            $invoice->debt = Helper::countDebt($invoice);
+            $invoice->total = $this->invoiceRepository->countInvoiceDebt($invoice);
+            $invoice->debt =  $this->invoiceRepository->countDebt($invoice);
         }
         return view('pages.home', $this->data);
     }

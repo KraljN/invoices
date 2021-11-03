@@ -20,12 +20,6 @@ abstract class BaseRepository implements BaseRepositoryInterface{
         $this->model = $model;
     }
 
-
-    public function findById(int $id, array $relations = null): ?Model
-    {
-        return $this->model::find($id)->with($relations);
-    }
-
     public function create($payload): bool
     {
         DB::beginTransaction();
@@ -64,7 +58,7 @@ abstract class BaseRepository implements BaseRepositoryInterface{
     public function deleteById(int $id): bool
     {
         try{
-            $this->findById($id)->delete();
+            $this->model::find($id)->delete();
             return true;
         }
         catch(\PDOException $ex){

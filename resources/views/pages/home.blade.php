@@ -192,7 +192,7 @@
                                     <td>{{ Helper::formatDate($invoice->date_created) }}</td>
                                     <td>{{ Helper::formatDate($invoice->end_date) }}</td>
                                     <td class="text-primary fw-bold">{{ $invoice->client->client_name }}</td>
-                                    <td>{{ $invoice->total }}</td>
+                                    <td>{{ $invoice->total }} RSD</td>
                                     <td>{{ $invoice->debt }} RSD</td>
                                     <td class="d-flex justify-content-around align-items-center">
                                         <a href="{{ route('invoices.edit', $invoice->id) }}">

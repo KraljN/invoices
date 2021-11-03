@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 interface BaseRepositoryInterface{
 
-    public function findById( int $id, array $relations = null ): ?Model;
-
     public function  create( array $payload ): bool;
 
     public function update( Model $model, array$payload): bool;

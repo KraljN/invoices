@@ -48,7 +48,7 @@
                                     </button>
                                 </a>
                                 <form action="{{ route('clients.destroy', $client->id) }}" method="POST">
-
+                                    @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">
                                         <i class="fas fa-trash text-white"></i>
