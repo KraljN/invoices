@@ -168,7 +168,7 @@
         <div class="container">
             <div class="row w-100">
                 @if( count( $invoices ) == 0)
-                    <x-alert type="info" message="Trenutno nemate ni jednog klijenta." />
+                    <x-alert type="info" message="Nijedna faktura ne odgovara pretrazi. Molimo ubacite novu fakturu ako nema nijedne." />
                 @else
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -205,6 +205,20 @@
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">
                                                 <i class="fas fa-trash text-white"></i>
+                                            </button>
+                                        </form>
+
+                                        <form action="#" method="POST">
+
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="far fa-envelope text-white"></i>
+                                            </button>
+                                        </form>
+
+                                        <form action="#" method="POST">
+
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fas fa-file-pdf text-white"></i>
                                             </button>
                                         </form>
 

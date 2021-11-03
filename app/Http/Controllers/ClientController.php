@@ -7,6 +7,8 @@ use App\Http\Requests\ClientRequest;
 use App\Models\City;
 use App\Models\Client;
 use App\Models\Country;
+use App\Repository\ClientRepositoryInterface;
+use App\Repository\Eloquent\ClientRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -15,16 +17,25 @@ use Illuminate\Support\Facades\Hash;
 
 class ClientController extends BaseController
 {
+
+    private $clientRepository;
+
+    public function __construct(ClientRepository $clientRepository)
+    {
+        $this->clientRepository = $clientRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         $this->data['clients'] = Client::with(['country', 'city', 'invoices', 'invoices.payments', 'invoices.items'])->where('user_id', Auth::user()->id)->get();
         foreach ($this->data['clients'] as $client){
-            $client->debt = Helper::countDebt($client);
+            $client->debt = $this->clientRepository->countDebt($client);
         }
         return view('pages.clients.index', $this->data);
     }
@@ -48,19 +59,24 @@ class ClientController extends BaseController
      */
     public function store(ClientRequest $request)
     {
-        $client = new Client();
-        return Helper::fillClientValues($request, $client, 'Uspešno dodat novi klijent.');
+        $inserted = $this->clientRepository->create($request->except('_token'));
+
+        if($inserted){
+            return  redirect()->back()->with('success', 'Uspešno dodat klijent.');
+
+        }
+        return  redirect()->back()->with('error', 'Došlo je do greške prilikom dodavanja klijenta. Molimo Vas pokušajte kasnije.');
+
 
     }
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  CLient  $client
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Client $client)
     {
-        $client = Client::with(['country', 'city'])->find($id);
         //Ovo radimo da bi u form.blade.php prikazali sa $client->country umesto $client->country->name jer ce kod store funkcije $client->country biti null pa se nece moci procitati name iz null
         $client->country = $client->country->name;
         $client->city = $client->city->name;
@@ -74,29 +90,17 @@ class ClientController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function update(ClientRequest $request, $id)
+    public function update(ClientRequest $request, Client $client)
     {
-        //Provera da li je neki podatak promenjen u odnosu na ono sto se nalazi u bazi
-        $clientInDatabase = Client::with(['country', 'city'])->find($id);
-        $optimizedClientToCompare = clone $clientInDatabase;
-        //=======Prilagodjavanje atributa radi lakseg kasnijeg poredjenja===========
-        $optimizedClientToCompare->country = $clientInDatabase->country->name;
-        $optimizedClientToCompare->city = $clientInDatabase->city->name;
-        //==========================================================================
-        $dataFromClientInDatabase = $optimizedClientToCompare->attributesToArray();
-        $formData = Helper::removeFromAssociativeArray($request->all(), ['_token', '_method']);
-        $dataFromClientInDatabase = Helper::removeFromAssociativeArray($dataFromClientInDatabase, ['id', 'country_id', 'city_id', 'user_id', 'created_at', 'updated_at']);
-        $difference = array_diff_assoc($formData, $dataFromClientInDatabase);
-        //Kraj provere
-        if( count( $difference ) == 0 ){
-            return redirect()->back()->withInput()->with('error', 'Morate promeniti makar jedno polje.');
-        }
-        else{
-            return Helper::fillClientValues($request, $clientInDatabase, 'Uspešno izmenjen klijent.');
-        }
+               $updated = $this->clientRepository->update($client, $request->except('_token'));
+               if($updated){
+                   return  redirect()->back()->with('success', 'Uspešno izmenjen klijent.');
+
+               }
+               return  redirect()->back()->with('error', 'Došlo je do greške prilikom izmene klijenta. Molimo Vas pokušajte kasnije.');
     }
 
     /**
@@ -107,7 +111,7 @@ class ClientController extends BaseController
      */
     public function destroy($id)
     {
-        Client::find($id)->delete();
+        $this->clientRepository->deleteById($id);
         return back();
     }
 }

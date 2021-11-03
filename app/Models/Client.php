@@ -9,6 +9,8 @@ class Client extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = ['client_name', 'vat', 'bank_account_number', 'address', 'registration_number', 'email', 'zip', 'updated_at'];
+
     public function country(){
 
         return $this->belongsTo(Country::class);

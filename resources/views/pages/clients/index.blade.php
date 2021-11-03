@@ -17,7 +17,7 @@
     <div class="container">
         <div class="row w-100">
             @if( count( $clients ) == 0)
-                <x-alert type="info" message="Trenutno nemate ni jednog klijenta." />
+                <x-alert type="info" message="Trenutno nemate nijednog klijenta." />
             @else
             <div class="table-responsive">
                 <table class="table table-striped">
