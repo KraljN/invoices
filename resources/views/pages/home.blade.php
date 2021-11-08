@@ -133,27 +133,30 @@
             <div class="container d-flex flex-column flex-md-row justify-content-around align-items-center">
                 <div class="col-2 fw-bold">Fakture</div>
                 <div class="col-md-8">
-                    <form class="d-flex flex-column flex-md-row" action="#" method="GET">
+                    <form class="d-flex flex-column flex-md-row" action="{{ route('home') }}" method="GET">
                         <div class="col-md-3">
                             <label class="visually-hidden" for="inlineFormInputGroupUsername">Ime Klijenta</label>
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-search"></i></div>
-                                <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Ime Klijenta"/>
+                                <input type="search" @if(request()->query->has('name'))  value="{{ request()->query('name') }}" @endif name="name" class="form-control" placeholder="Ime Klijenta"/>
                             </div>
                         </div>
                         <div class="col-md-3 ms-1">
-                            <input class="form-control" type="date"/>
+                            <input class="form-control" @if(request()->query->has('date'))  value="{{ request()->query('date') }}" @endif name="date" type="date"/>
                         </div>
                         <div class="col-md-3 ms-1">
                             <select name="status" class="form-select">
                                 <option value="0">Sve</option>
-                                <option value="1">Plaćene</option>
-                                <option value="2">Neplaćene</option>
-                                <option value="3">Istekao Rok</option>
+                                @foreach($invoiceStatuses as $status)
+                                    <option @if(request()->query('status') == $status->id) selected="selected" @endif value="{{ $status->id }}">{{ $status->status_name }}</option>
+                                @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4 ms-1">
+                        <div class="col-md-1 ms-1">
                             <button class="btn btn-dark" type="submit">Pretraži</button>
+                        </div>
+                        <div class="col-md-2 ms-3">
+                            <a class="btn btn-success" href="{{ route('home') }}">Prikaži Sve</a>
                         </div>
                     </form>
                 </div>

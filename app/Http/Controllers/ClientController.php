@@ -2,18 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Helper;
+
 use App\Http\Requests\ClientRequest;
-use App\Models\City;
 use App\Models\Client;
-use App\Models\Country;
 use App\Repository\ClientRepositoryInterface;
 use App\Repository\Eloquent\ClientRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
 class ClientController extends BaseController
 {

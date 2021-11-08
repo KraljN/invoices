@@ -2,10 +2,16 @@
 
 namespace App\Repository;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+
+use Illuminate\Support\Collection;
 
 interface InvoiceRepositoryInterface{
 
-    public function checkIfOverdue( Collection $invoices );
+    public function checkIfOverdue( EloquentCollection $invoices );
+
+    public function getInvoicesStatuses(): Collection;
+
+    public function getInvoices(): Collection;
 
 }

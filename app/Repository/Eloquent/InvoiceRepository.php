@@ -6,9 +6,12 @@ use App\Models\Invoice;
 use App\Models\InvoiceStatus;
 use App\Repository\InvoiceRepositoryInterface;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Collection;
 
 class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInterface {
 
@@ -27,7 +30,7 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
         return $totalDebt;
     }
 
-    public function checkIfOverdue(Collection $invoices)
+    public function checkIfOverdue(EloquentCollection $invoices)
     {
         foreach($invoices as $invoice){
             $endDate = Carbon::make($invoice->end_date);
@@ -38,5 +41,32 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
                 $invoice->save();
             }
         }
+    }
+
+    public function getInvoicesStatuses(): Collection
+    {
+        return InvoiceStatus::all();
+    }
+
+    public function getInvoices(): Collection
+    {
+        $invoices = Invoice::with(['client', 'payments', 'items', 'invoiceStatus'])
+            ->where('user_id', Auth::id());
+        if (request()->query('status') > '0') {
+            $invoices->whereHas('invoiceStatus', function (Builder $query) {
+                $query->where('id', request()->query('status'));
+            });
+        }
+        if(request()->query('date')){
+            $invoices->where('date_created', request()->query('date'));
+        }
+
+        if(request()->query('name')){
+            $invoices->whereHas('client', function (Builder $query) {
+                $query->where('client_name', request()->query('name'));
+            });
+        }
+//        dd($invoices->get());
+        return $invoices->get();
     }
 }

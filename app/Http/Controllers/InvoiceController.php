@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Helper;
 use App\Models\Invoice;
 use App\Repository\InvoiceRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,7 +29,8 @@ class InvoiceController extends BaseController
             $query->where('id', Config::get('constants.invoice_status.unpaid'));
         })->get();
         $this->invoiceRepository->checkIfOverdue($allUnpaidInvoices);
-        $this->data['invoices'] = Invoice::with(['client', 'payments', 'items', 'invoiceStatus'])->where('user_id', Auth::id())->get();
+        $this->data['invoiceStatuses'] = $this->invoiceRepository->getInvoicesStatuses();
+        $this->data['invoices'] = $this->invoiceRepository->getInvoices();
         foreach ($this->data['invoices'] as $invoice){
             $invoice->total = $this->invoiceRepository->countInvoiceDebt($invoice);
             $invoice->debt =  $this->invoiceRepository->countDebt($invoice);
