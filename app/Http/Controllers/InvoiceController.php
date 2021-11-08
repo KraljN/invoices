@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InvoiceCreateRequest;
 use App\Models\Invoice;
 use App\Repository\InvoiceRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,6 +32,9 @@ class InvoiceController extends BaseController
         $this->invoiceRepository->checkIfOverdue($allUnpaidInvoices);
         $this->data['invoiceStatuses'] = $this->invoiceRepository->getInvoicesStatuses();
         $this->data['invoices'] = $this->invoiceRepository->getInvoices();
+        //Ispis klijenata prilikom dodavanja nove fakture
+        $this->data['clients'] = $this->invoiceRepository->getClients();
+
         foreach ($this->data['invoices'] as $invoice){
             $invoice->total = $this->invoiceRepository->countInvoiceDebt($invoice);
             $invoice->debt =  $this->invoiceRepository->countDebt($invoice);
@@ -54,9 +58,9 @@ class InvoiceController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(InvoiceCreateRequest $request)
     {
-        //
+        dd($request->all());
     }
 
     /**

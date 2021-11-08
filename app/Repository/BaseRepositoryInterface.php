@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Models\Invoice;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 interface BaseRepositoryInterface{
 
@@ -20,4 +21,6 @@ interface BaseRepositoryInterface{
 
     //Ukupna suma na jednoj fakturi
     public function countInvoiceDebt( Invoice $invoice): float;
+
+    public function getClients(): Collection;
 }

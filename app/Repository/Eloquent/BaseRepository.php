@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\Invoice;
 use App\Repository\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -112,6 +113,11 @@ abstract class BaseRepository implements BaseRepositoryInterface{
             }
         }
 
+    }
+
+    public function getClients(): Collection
+    {
+        return Client::with(['country', 'city', 'invoices', 'invoices.payments', 'invoices.items'])->where('user_id', Auth::id())->get();
     }
 
 }

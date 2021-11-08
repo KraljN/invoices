@@ -63,10 +63,9 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
 
         if(request()->query('name')){
             $invoices->whereHas('client', function (Builder $query) {
-                $query->where('client_name', request()->query('name'));
+                $query->where('client_name', 'like', '%' .  request()->query('name') . "%");
             });
         }
-//        dd($invoices->get());
         return $invoices->get();
     }
 }

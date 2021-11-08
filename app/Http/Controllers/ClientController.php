@@ -27,7 +27,7 @@ class ClientController extends BaseController
 
     public function index()
     {
-        $this->data['clients'] = Client::with(['country', 'city', 'invoices', 'invoices.payments', 'invoices.items'])->where('user_id', Auth::user()->id)->get();
+        $this->data['clients'] = $this->clientRepository->getClients();
         foreach ($this->data['clients'] as $client){
             $client->debt = $this->clientRepository->countDebt($client);
         }

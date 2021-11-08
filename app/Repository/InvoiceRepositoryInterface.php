@@ -14,4 +14,5 @@ interface InvoiceRepositoryInterface{
 
     public function getInvoices(): Collection;
 
+
 }

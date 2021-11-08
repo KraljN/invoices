@@ -161,9 +161,7 @@
                     </form>
                 </div>
                 <div class="col-2">
-                    <form action="{{ route('clients.create') }}">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus me-2 text-white"></i> Dodaj Fakturu</button>
-                    </form>
+                    <button data-bs-toggle="modal" data-bs-target="#createInvoice" class="btn btn-primary"><i class="fas fa-plus me-2 text-white"></i> Dodaj Fakturu</button>
                 </div>
             </div>
         </div>
@@ -232,6 +230,73 @@
                         </table>
                     </div>
                 @endif
+            </div>
+        </div>
+        <input  id="error" value=" @if($errors->any()) 1 @endif "  type="hidden"/>
+        <!-- Modal -->
+        <div class="modal fade" id="createInvoice" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Dodaj fakturu</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('invoices.store') }}" method="POST">
+                            @csrf
+                        <div class="col-8 mx-auto">
+                            <div class="row mb-2 d-flex align-items-center">
+                                <div class="col-3">
+                                    <label for="client">Klijent</label>
+                                </div>
+                                <div class="col-9">
+                                    <select class="form-select" name="client">
+                                        <option value="0">
+                                            Odaberi Klijenta
+                                        </option>
+                                        @foreach($clients as $client)
+                                            <option value="{{ $client->id }}">
+                                                {{ $client->client_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @error('client')
+                                <x-alert type="danger" :message="$message" />
+                                @enderror
+                            </div>
+                            <div class="row mb-2 d-flex align-items-center">
+                                <div class="col-3">
+                                    <label for="client">Naziv fakture</label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" name="name" class="form-control"/>
+                                </div>
+                                @error('name')
+                                <x-alert type="danger" :message="$message" />
+                                @enderror
+                            </div>
+                            <div class="row mb-2 d-flex align-items-center">
+                                <div class="col-3">
+                                    <label for="client">Datum fakture</label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="date" name="date" class="form-control"/>
+                                </div>
+                            </div>
+                            @error('date')
+                            <x-alert type="danger" :message="$message" />
+                            @enderror
+
+                            <small>*Ukoliko ne postoji nijedan klijent ubaciti ga na klijent stranici</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Otkaži</button>
+                        <button type="submit" class="btn btn-primary">Dodaj fakturu</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     @endauth
