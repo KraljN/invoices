@@ -291,7 +291,7 @@
                                 @endif
                             </div>
 
-                            <small>*Ukoliko ne postoji nijedan klijent ubaciti ga na klijent stranici</small>                            @if(session()->has('error'))
+                            <small>*Ukoliko ne postoji nijedan klijent ubaciti ga na <a class="text-decoration-none" href="{{ route('clients.create') }}">klijent stranici</a></small>                            @if(session()->has('error'))
 
                             @endif
 

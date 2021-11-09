@@ -17,8 +17,8 @@ class CreateInvoicesTable extends Migration
             $table->id();
             $table->string("invoice_name");
             $table->date('date_created');
-            $table->dateTime('date_of_traffic');
-            $table->dateTime('end_date');
+            $table->date('date_of_traffic');
+            $table->date('end_date');
             $table->text('note')->default(null);
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('user_id');

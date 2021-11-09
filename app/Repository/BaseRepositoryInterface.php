@@ -16,6 +16,7 @@ interface BaseRepositoryInterface{
 
     public function countDebt( Model $model ): float;
 
+
     //Placena kolicina za odredjenu fakturu
     public function countPayedInvoiceAmount( Invoice $invoice): float;
 

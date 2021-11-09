@@ -71,9 +71,11 @@ class InvoiceController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Invoice $invoice)
     {
-        return view('pages.invoices.form');
+        $this->data['invoiceStatuses'] = $this->invoiceRepository->getInvoicesStatuses();
+        $this->data['invoice'] = $invoice;
+        return view('pages.invoices.form', $this->data);
     }
 
     /**
