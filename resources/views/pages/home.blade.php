@@ -272,7 +272,7 @@
                                 <div class="col-9">
                                     <input type="text" value="{{  old('invoice_name') }}" name="invoice_name" class="form-control"/>
                                 </div>
-                                @error('name')
+                                @error('invoice_name')
                                 <x-alert type="danger" :message="$message" />
                                 @enderror
                             </div>
@@ -283,7 +283,7 @@
                                 <div class="col-9">
                                     <input type="date" value="{{  old('date_created') }}" name="date_created" class="form-control"/>
                                 </div>
-                                @error('date')
+                                @error('date_created')
                                 <x-alert type="danger" :message="$message" />
                                 @enderror
                                 @if(session()->has('error'))

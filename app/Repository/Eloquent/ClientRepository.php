@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class ClientRepository extends BaseRepository {
+class ClientRepository extends InvoiceClientRepository {
 
     public function __construct(Client $model)
     {

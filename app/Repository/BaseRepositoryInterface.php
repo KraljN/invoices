@@ -14,14 +14,14 @@ interface BaseRepositoryInterface{
 
     public function deleteById( int $id ): bool;
 
-    public function countDebt( Model $model ): float;
-
-
-    //Placena kolicina za odredjenu fakturu
-    public function countPayedInvoiceAmount( Invoice $invoice): float;
-
-    //Ukupna suma na jednoj fakturi
-    public function countInvoiceDebt( Invoice $invoice): float;
-
-    public function getClients(): Collection;
+//    public function countDebt( Model $model ): float;
+//
+//
+//    //Placena kolicina za odredjenu fakturu
+//    public function countPayedInvoiceAmount( Invoice $invoice): float;
+//
+//    //Ukupna suma na jednoj fakturi
+//    public function countInvoiceDebt( Invoice $invoice): float;
+//
+//    public function getClients(): Collection;
 }

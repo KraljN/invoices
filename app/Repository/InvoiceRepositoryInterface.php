@@ -14,5 +14,8 @@ interface InvoiceRepositoryInterface{
 
     public function getInvoices(): Collection;
 
+    public function getPdvTypes(): Collection;
+
+    public function getInvoiceItems($invoiceId): Collection;
 
 }

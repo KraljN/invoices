@@ -75,6 +75,8 @@ class InvoiceController extends BaseController
     {
         $this->data['invoiceStatuses'] = $this->invoiceRepository->getInvoicesStatuses();
         $this->data['invoice'] = $invoice;
+        $this->data['pdvTypes'] = $this->invoiceRepository->getPdvTypes();
+        $this->data['invoiceItems'] = $this->invoiceRepository->getInvoiceItems($invoice->id);
         return view('pages.invoices.form', $this->data);
     }
 

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ClientController;
+use \App\Models\InvoiceItem;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,5 +22,6 @@ Route::post('/login', [AuthenticationController::class, 'login'])->name('login')
 Route::get('/logout', [AuthenticationController::class, 'logout'])->name('logout');
 Route::resource('clients', ClientController::class)->except(['show']);
 Route::resource('invoices', InvoiceController::class)->except(['show', 'create']);
+Route::resource('invoice-items', InvoiceItem::class)->except(['show', 'create']);
 Route::get('/', [InvoiceController::class, 'index'])->name('home');
 

@@ -6,7 +6,9 @@ use App\Models\City;
 use App\Models\Client;
 use App\Models\Country;
 use App\Models\Invoice;
+use App\Models\InvoiceItem;
 use App\Models\InvoiceStatus;
+use App\Models\PdvType;
 use App\Repository\InvoiceRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,7 +19,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInterface {
+class InvoiceRepository extends InvoiceClientRepository implements InvoiceRepositoryInterface {
 
     public function __construct(Invoice $model)
     {
@@ -99,5 +101,15 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
             return false;
         }
 
+    }
+
+    public function getPdvTypes(): Collection
+    {
+        return PdvType::all();
+    }
+
+    public function getInvoiceItems($invoiceId): Collection
+    {
+        return InvoiceItem::with(['invoice', 'pdvType'])->where('invoice_id', $invoiceId)->get();
     }
 }
