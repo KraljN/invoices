@@ -20,8 +20,8 @@ class InvoiceCreateRequest extends FormRequest
     {
         return [
             'client'=>'Klijent',
-            'name'=>'Naziv Fakture',
-            'date'=>'Datum Fakture',
+            'invoice_name'=>'Naziv Fakture',
+            'date_created'=>'Datum Fakture',
         ];
     }
 
@@ -33,17 +33,18 @@ class InvoiceCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'client'=>"required|min:1",
-            'name'=>"required",
-            'date'=>"required|date"
+            'client'=>"required|regex:/[^0]/",
+            'invoice_name'=>"required",
+            'date_created'=>"required|date"
         ];
     }
     public function messages()
     {
         return [
             'client.min'=>'Morate odabrati klijenta',
+            'client.regex'=>'Morate odabrati klijenta',
             'required'=>':attribute polje je obavezno.',
-            'date.date'=>'Datum Fakture'
+            'date_created.date'=>'Datum Fakture'
         ];
     }
 }

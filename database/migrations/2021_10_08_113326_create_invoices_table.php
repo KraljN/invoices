@@ -19,11 +19,13 @@ class CreateInvoicesTable extends Migration
             $table->date('date_created');
             $table->dateTime('date_of_traffic');
             $table->dateTime('end_date');
-            $table->text('note');
+            $table->text('note')->default(null);
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('client_id');
             $table->timestamps();
+
+
 
             $table->foreign('status_id')->references('id')->on('invoice_statuses');
             $table->foreign('user_id')->references('id')->on('users');

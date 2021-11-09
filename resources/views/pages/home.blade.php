@@ -255,7 +255,7 @@
                                             Odaberi Klijenta
                                         </option>
                                         @foreach($clients as $client)
-                                            <option value="{{ $client->id }}">
+                                            <option @if(old('client') == $client->id) selected="selected" @endif value="{{ $client->id }}">
                                                 {{ $client->client_name }}
                                             </option>
                                         @endforeach
@@ -270,7 +270,7 @@
                                     <label for="client">Naziv fakture</label>
                                 </div>
                                 <div class="col-9">
-                                    <input type="text" name="name" class="form-control"/>
+                                    <input type="text" value="{{  old('invoice_name') }}" name="invoice_name" class="form-control"/>
                                 </div>
                                 @error('name')
                                 <x-alert type="danger" :message="$message" />
@@ -281,14 +281,20 @@
                                     <label for="client">Datum fakture</label>
                                 </div>
                                 <div class="col-9">
-                                    <input type="date" name="date" class="form-control"/>
+                                    <input type="date" value="{{  old('date_created') }}" name="date_created" class="form-control"/>
                                 </div>
+                                @error('date')
+                                <x-alert type="danger" :message="$message" />
+                                @enderror
+                                @if(session()->has('error'))
+                                        <x-alert type="danger" message="{{ session()->get('error') }}" />
+                                @endif
                             </div>
-                            @error('date')
-                            <x-alert type="danger" :message="$message" />
-                            @enderror
 
-                            <small>*Ukoliko ne postoji nijedan klijent ubaciti ga na klijent stranici</small>
+                            <small>*Ukoliko ne postoji nijedan klijent ubaciti ga na klijent stranici</small>                            @if(session()->has('error'))
+
+                            @endif
+
                         </div>
                     </div>
                     <div class="modal-footer">

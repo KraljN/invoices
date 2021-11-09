@@ -9,6 +9,8 @@ class Invoice extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = ['invoice_name', 'date_created'];
+
     public function invoiceStatus(){
 
         return $this->belongsTo(InvoiceStatus::class, 'status_id');

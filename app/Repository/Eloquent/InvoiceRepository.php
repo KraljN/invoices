@@ -2,6 +2,9 @@
 
 namespace App\Repository\Eloquent;
 
+use App\Models\City;
+use App\Models\Client;
+use App\Models\Country;
 use App\Models\Invoice;
 use App\Models\InvoiceStatus;
 use App\Repository\InvoiceRepositoryInterface;
@@ -12,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInterface {
 
@@ -67,5 +71,33 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
             });
         }
         return $invoices->get();
+    }
+
+    public function create($payload): bool
+    {
+
+        DB::beginTransaction();
+        $status = InvoiceStatus::find(Config::get('constants.invoice_status.unpaid'));
+        $client = Client::find($payload['client']);
+        $this->model->user()->associate(Auth::user());
+        $this->model->client()->associate($client);
+        $this->model->invoiceStatus()->associate($status);
+        $this->model->date_of_traffic = $payload['date_created'];
+        $carbonDate = Carbon::make($payload['date_created']);
+        $defaultEndDate = $carbonDate->addDays(10);
+        $formatedDate = date("Y-m-d H:i:s", $defaultEndDate->getTimestamp());
+        $this->model->end_date = $formatedDate;
+        try{
+            $this->model->fill($payload);
+            $this->model->save();
+            DB::commit();
+            session()->put('insertedInvoiceId', $this->model->id);
+            return true;
+        }
+        catch (\PDOException $ex){
+            DB::rollBack();
+            return false;
+        }
+
     }
 }

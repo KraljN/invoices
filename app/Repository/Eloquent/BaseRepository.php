@@ -21,24 +21,7 @@ abstract class BaseRepository implements BaseRepositoryInterface{
         $this->model = $model;
     }
 
-    public function create($payload): bool
-    {
-        DB::beginTransaction();
-        $this->model =  $this->insertIfNameDoesntExist($payload['country'], new Country(), $this->model->country());
-        $this->model = $this->insertIfNameDoesntExist($payload['city'], new City(), $this->model->city());
-        $this->model->user()->associate(Auth::user());
-
-        try{
-            $this->model->fill($payload);
-            $this->model->save();
-            DB::commit();
-            return true;
-        }
-        catch (\PDOException $ex){
-            DB::rollBack();
-            return false;
-        }
-    }
+    abstract function create($payload): bool;
 
     public function update(Model $model, array $payload): bool
     {

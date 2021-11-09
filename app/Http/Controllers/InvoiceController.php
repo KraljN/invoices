@@ -42,15 +42,6 @@ class InvoiceController extends BaseController
         return view('pages.home', $this->data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -60,7 +51,11 @@ class InvoiceController extends BaseController
      */
     public function store(InvoiceCreateRequest $request)
     {
-        dd($request->all());
+        $inserted = $this->invoiceRepository->create($request->except('_token'));
+        if($inserted){
+            return  redirect()->route('invoices.edit', session()->get('insertedInvoiceId'))->with('success', 'Uspešno dodata faktura.');
+        }
+        return  redirect()->back()->withInput()->withErrors(['Duplicate Entry'])->with('error', 'Već postoji faktura sa takvim nazivom za datog klijenta.');
     }
 
     /**
@@ -78,7 +73,7 @@ class InvoiceController extends BaseController
      */
     public function edit($id)
     {
-        //
+        return view('pages.invoices.form');
     }
 
     /**
