@@ -91,92 +91,9 @@
                         </thead>
                         <tbody>
                         @foreach($invoiceItems as $item)
-                            <form action="{{ route('invoice-items.update', $item->id) }}" method="POST">
-                                <tr>
-                                    <td>
-                                        <textarea class="form-control" name="description"cols="5" rows="2">{{ $item->description }}</textarea>
-                                    </td>
-                                    <td>
-                                        <input class="form-control" value="{{ $item->quantity }}" min="0" type="number"/>
-                                    </td>
-                                    <td>
-                                        <input class="form-control" value="{{ $item->price }}" type="text"/>
-                                    </td>
-                                    <td>
-                                        <select name="status" class="form-select">
-                                            @foreach($pdvTypes as $pdv)
-                                                @if( $pdv->pdv_type_name == 0)
-                                                    <option value="0">
-                                                        None
-                                                    </option>
-                                                @else
-                                                    <option @if($item->pdvType->pdv_type_name == $pdv->pdv_type_name) selected="selected" @endif value="{{ $pdv->pdv_type_name }}">
-                                                        {{ $pdv->pdv_type_name }}%
-                                                    </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        {{ ($item->quantity * $item->price) - ($item->quantity * $item->price)  *  $item->pdvType->pdv_type_name / 100 }} RSD
-                                    </td>
-                                    <td>
-                                        {{ $item->pdvType->pdv_type_name / 100 }} RSD
-                                    </td>
-                                    <td>
-                                        {{ ($item->quantity * $item->price) }} RSD
-                                    </td>
-                                    <td class="d-flex justify-content-around align-items-center">
-                                        <a href="#">
-                                            <button type="submit" class="btn btn-warning me-1">
-                                                <i class="fas fa-edit text-white"></i>
-                                            </button>
-                                        </a>
-                                        <form action="#" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">
-                                                <i class="fas fa-trash text-white"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </form>
+                            <x-invoice-item :pdvTypes="$pdvTypes" :item="$item"/>
                         @endforeach
-                        <form action="#" method="POST" id="insertInvoiceItem">
-                        <tr>
-                            <td>
-                                <textarea class="form-control" name="description"cols="40" rows="2"></textarea>
-                            </td>
-                            <td>
-                                <input class="form-control" min="0" type="number"/>
-                            </td>
-                            <td>
-                                <input class="form-control" type="text"/>
-                            </td>
-                            <td>
-                                <select name="status" class="form-select">
-                                    @foreach($pdvTypes as $pdv)
-                                            @if( $pdv->pdv_type_name == 0)
-                                            <option value="0">
-                                                None
-                                            </option>
-                                            @else
-                                            <option value="{{ $pdv->pdv_type_name }}">
-                                                {{ $pdv->pdv_type_name }}%
-                                            </option>
-                                            @endif
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td class="d-flex justify-content-around align-items-center">
-                                <button type="submit" form="insertInvoiceItem" class="btn btn-success"><i class="fas fa-plus"></i></button>
-                            </td>
-                        </tr>
-                        </form>
+                        <x-invoice-item :pdvTypes="$pdvTypes"/>
                         </tbody>
                     </table>
                 </div>
